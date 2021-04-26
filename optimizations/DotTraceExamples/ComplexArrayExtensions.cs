@@ -18,9 +18,9 @@ namespace DotTraceExamples
 		public static double SumModules(this Complex[] data)
 		{
 			var sum = 0.0;
-			for (int i = 0; i < data.Length; i++)
+			foreach (var t in data)
 			{
-				sum += data[i].Magnitude;
+				sum += t.Magnitude;
 			}
 
 			return sum;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using ImageProcessing;
 
 namespace DotTraceExamples
@@ -118,7 +119,14 @@ namespace DotTraceExamples
 			var d = Math.Abs(centerRed - neighborRed) + Math.Abs(centerGreen - neighborGreen) +
 					Math.Abs(centerBlue - neighborBlue);
 
-			return Math.Pow(1 - d, multiplicationFactor);
+			var pow = 0;
+			for (var i = 0; i < multiplicationFactor; i++)
+			{
+				pow *= (1 - d);
+			}
+
+			return pow;
+			//return Math.Pow(1 - d, multiplicationFactor);
 		}
 
 	}

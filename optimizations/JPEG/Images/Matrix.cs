@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace JPEG.Images
 {
@@ -7,12 +8,13 @@ namespace JPEG.Images
         public readonly Pixel[,] Pixels;
         public readonly int Height;
         public readonly int Width;
-				
+        private readonly int bytesPerPixel = 3;
+
         public Matrix(int height, int width)
         {
             Height = height;
             Width = width;
-			
+
             Pixels = new Pixel[height,width];
             for(var i = 0; i< height; ++i)
             for(var j = 0; j< width; ++j)
@@ -35,6 +37,25 @@ namespace JPEG.Images
             }
 
             return matrix;
+        }
+
+        public unsafe Color GetPixelFromBitmap(Bitmap bitmap, int x, int y)
+        {
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadWrite,
+                bitmap.PixelFormat);
+
+            var heightInPixels = bitmap.Height;
+            var widthInBytes = bitmapData.Width * bytesPerPixel;
+            var pointerFirstPixel = (byte*)bitmapData.Scan0;
+            var currentLine = pointerFirstPixel + (y * bitmapData.Stride);
+
+            var currentFirstByte = x * bytesPerPixel + 1;
+
+
+
+            bitmap.UnlockBits(bitmapData);
+            return bitmap.GetPixel(1, 1);
         }
 
         public static explicit operator Bitmap(Matrix matrix)

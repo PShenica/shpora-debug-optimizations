@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Diagnostics;
+using BenchmarkDotNet.Running;
+using JPEG.Benchmarks;
 using JPEG.Images;
 using PixelFormat = JPEG.Images.PixelFormat;
 
@@ -15,6 +17,8 @@ namespace JPEG
 
 		static void Main(string[] args)
 		{
+			//var summery = BenchmarkRunner.Run<JpegBenchmark>();
+
 			try
 			{
 				Console.WriteLine(IntPtr.Size == 8 ? "64-bit version" : "32-bit version");
@@ -23,7 +27,7 @@ namespace JPEG
 //				var fileName = "Big_Black_River_Railroad_Bridge.bmp";
 				var compressedFileName = fileName + ".compressed." + CompressionQuality;
 				var uncompressedFileName = fileName + ".uncompressed." + CompressionQuality + ".bmp";
-				
+
 				using (var fileStream = File.OpenRead(fileName))
 				using (var bmp = (Bitmap) Image.FromStream(fileStream, false, false))
 				{
@@ -80,7 +84,7 @@ namespace JPEG
 
 			return new CompressedImage {Quality = quality, CompressedBytes = compressedBytes, BitsCount = bitsCount, DecodeTable = decodeTable, Height = matrix.Height, Width = matrix.Width};
 		}
-		
+
 		private static Matrix Uncompress(CompressedImage image)
 		{
 			var result = new Matrix(image.Height, image.Width);
@@ -115,7 +119,7 @@ namespace JPEG
 		{
 			var height = subMatrix.GetLength(0);
 			var width = subMatrix.GetLength(1);
-			
+
 			for(var y = 0; y < height; y++)
 				for(var x = 0; x < width; x++)
 					subMatrix[y, x] = subMatrix[y, x] + shiftValue;
